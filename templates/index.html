@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <title>Clothing pattern detection</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/static/css/tooplate-main.css">
+    <link rel="stylesheet" href="/static/css/owl.css">
+
+
+    <style>
+
+.input {
+
+border: 1px solid rgb(38, 35, 35);
+border-radius: 10px;
+
+}
+.files input {
+outline: 2px dashed #2e68a5;
+outline-offset: -10px;
+-webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+transition: outline-offset .15s ease-in-out, background-color .15s linear;
+padding: 120px 0px 85px 35%;
+text-align: center !important;
+margin: 0;
+width: 100% !important;
+height: 10px;
+}
+/* .files input:focus{     outline: 2px dashed #92b0b3;  outline-offset: -10px;
+-webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+transition: outline-offset .15s ease-in-out, background-color .15s linear; border:1px solid #92b0b3;
+} */
+.files{ position:relative}
+.files:after {  pointer-events: none;
+position: absolute;
+top: 60px;
+left: 5px;
+width: 50px;
+right: 5px;
+height: 26px;
+content: "";
+background-image: url('/static/images/drive_folder_upload_white_18dp.svg');
+display: block;
+margin: 0 auto;
+background-size: 100%;
+background-repeat: no-repeat;
+background-color: #1917170f;
+}
+
+.files:before {
+position: absolute;
+bottom: 10px;
+left: 5px;  pointer-events: none;
+width: 100%;
+right: 5px;
+height: 26px;
+content: " or drag it here. ";
+display: block;
+margin: 0 auto;
+color: #2e68a5;
+font-weight: 600;
+text-transform: capitalize;
+text-align: center;
+}
+
+.form-control {
+  background-color: #19171723;
+            border-radius: 15px;
+        
+    }
+
+    </style>
+  </head>
+
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+      <div class="container">
+        <a class="navbar-brand" href="#"><img src="/static/images/header-logo1.png" width="70px" height="70px" alt=""></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="index.html">Home
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Products</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About Us</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact Us</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <!-- Banner Starts Here -->
+    <div class="banner">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="caption">
+              <h2>Find Pattern of Women's Clothes </h2>
+              <div class="line-dec"></div>
+              <br><br>Hello, now you can just upload image here and can get the approx idea about it's pattern,fabric.</p>
+              <div class="main-button">
+                <form id="post-form"    enctype="multipart/form-data">
+                  <div class="form-group files container">
+                      <label>Upload Your File </label>
+                      <input type="file" class="form-control" accept="image/*" id='img' name ="img" required>
+                    </div>
+                    <button class="mx-4 my-4 btn btn-primary btn-md extract text-light"
+                                        type="submit" style="display:block;" id="convert">Convert-FILE</button>
+                  <small class="mx-2" id="converting" style="display: none;">converting....</small>
+                </form>
+                <div id="output" style="display: none;">
+                <p class="text-danger lead" >
+                 Pattern:  <span class="text-dark" id="r1"></span>
+                </p>
+                <p class="text-danger lead" >
+                 Fabrics:  <span class="text-dark" id="r2"></span>
+                </p>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Banner Ends Here -->
+  
+<script>
+$('#ans').show();
+$('#post-form').submit(function (e) {
+            var data = new FormData();
+        var image = $('#img')[0].files[0];  
+        var validImageTypes = ["image/gif", "image/jpeg", "image/png","image/jpg"];
+        var fileType = image["type"];
+        e.preventDefault();
+        if ($.inArray(fileType, validImageTypes) < 0) {
+            document.getElementById('notify').innerHTML = "*Invalid Image format";
+        }
+        else{
+        data.append('image', image);
+                document.getElementById("converting").style.display = "block";
+        $.ajax({
+            type: 'POST',
+            url: '/upload',
+            data:data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            encode:true,
+            success: function (response) {
+              document.getElementById('output').style.display = "block";
+              x = JSON.parse(response)
+document.getElementById('r1').innerHTML =  x['r1'] ;
+document.getElementById('r2').innerHTML =  x['r2'] ;
+                document.getElementById("converting").style.display = "none";
+            },
+            error: function (response) {
+                    document.getElementById("converting").style.display = "none";
+                },
+            })
+        }
+        })
+
+</script>
+
+  </body>
+
+</html>
